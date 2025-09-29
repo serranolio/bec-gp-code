@@ -1,4 +1,4 @@
-# Gross-Pitaevskii Equation Solver for Spinor Bose–Einstein Condensates
+# Gross-Pitaevskii Equation Solver for Bose–Einstein Condensates
 
 This repository contains Python and Bash scripts to simulate Bose–Einstein condensates (BECs) with multiple spin components by numerically solving the **Gross–Pitaevskii equation (GPE)**.  
 Different geometries are implemented: 1D, 3D Cartesian, and 3D with axial symmetry.
@@ -43,7 +43,7 @@ Simulation code for **three-dimensional systems with axial symmetry** (cylindric
 ## Usage
 
 1. Navigate to the desired folder (`gp_1d`, `gp_3d`, or `gp_3d_axial`).  
-2. Edit `parameters.py` to set system parameters.  
+2. Edit `parameters.py` and `create_files.sh` to set system parameters.  
 3. Run `create_files.sh` to generate parameterized copies of the scripts.  
 4. Launch the simulation with:
    ```bash
