@@ -136,7 +136,7 @@ def H_single_particle(psi, detuning, lattice_strength):
     psi = psi.reshape((3, -1))
 
     # precompute potential term
-    lattice = (2 * lattice_strength * np.sin(k_l*z)**2)
+    lattice = (2 * lattice_strength * np.sin(k_l*z_)**2)
     potential_term = (U + lattice)[None, :] * psi
 
     # apply hamiltonian
@@ -161,14 +161,14 @@ def H_interaction(psi):
     psi = psi.reshape((3, -1))
     # density potential
     density = np.sum(np.abs(psi)**2, axis=0)
-    return g_1d * (density[None, :] * psi).reshape(original_shape)
+    return g * n_atoms * (density[None, :] * psi).reshape(original_shape)
 
 '''
 4. sequence functions --------------------------------------------------
 '''
 
 def sequence_cooling(t, psi, delta, omega):
-    norm = np.sum(dz*np.abs(psi.reshape((3, -1)))**2)
+    norm = np.sum(dx*dy*dz*np.abs(psi.reshape((3, -1)))**2)
 
     H_psi = (H_single_particle(psi,
                                detuning=delta,
@@ -176,7 +176,7 @@ def sequence_cooling(t, psi, delta, omega):
              + H_interaction(psi))
 
     chemical_potential = ((psi.conj() * H_psi).reshape((3, -1))
-                          * dz).sum()/norm
+                          * dx*dy*dz).sum() / norm
 
     return -H_psi + chemical_potential*psi
 
@@ -195,29 +195,29 @@ def sequence_ramp(t, psi, delta_fun, lattice_fun):
 '''
 def get_ground_state(steps, step_size, delta, omega):
     if g==0:
-        psi0 = (1/pi)**(1/4)*np.exp(-(z**2)/2) + 0j
+        psi0 = (1/pi)**(1/4)*np.exp(-(x_**2 + y_**2 + z_**2)/2) + 0j
         psi0 = psi0.reshape((nz, ))
     else:
-        trap = ((wz*z)**2)/4
+        trap = ((wx*x_)**2 + (wy*y_)**2 + (wz*z_)**2) / 4
         psi0 = (np.sqrt(np.abs(mu - trap)) + 0j)*(trap < mu)
-        norm = ((dz*psi0*psi0.conj()).real).sum()
-        psi0 = psi0/np.sqrt(norm)
+        norm = ((dx*dy*dz*psi0*psi0.conj()).real).sum()
+        psi0 = psi0 / np.sqrt(norm)
     psi_initial = np.array([psi0/np.sqrt(3), 
                             psi0/np.sqrt(3), 
-                            psi0/np.sqrt(3)]).reshape(3*nz)
+                            psi0/np.sqrt(3)]).reshape(3*nx*ny*nz)
 
-    #psi = rk4(fun=sequence_cooling,
-    #          y0=psi_initial,
-    #          frames=2,
-    #          steps=steps,
-    #          step_size=step_size,
-    #          delta=delta,
-    #          omega=omega)[:, -1]
-    psi = split_step_imag_time(psi_initial, steps, step_size, delta, omega)
+    psi = rk4(fun=sequence_cooling,
+              y0=psi_initial,
+              frames=2,
+              steps=steps,
+              step_size=step_size,
+              delta=delta,
+              omega=omega)[:, -1]
+    #psi = split_step_imag_time(psi_initial, steps, step_size, delta, omega)
     
     psi.shape = (3, -1)
-    norm = (dz*psi.conj()*psi).sum()
-    psi = psi/np.sqrt(norm)
+    norm = (dx*dy*dz*psi.conj()*psi).sum()
+    psi = psi / np.sqrt(norm)
 
-    return np.array(psi.reshape(3*nz))
+    return np.array(psi.reshape(3*nx*ny*nz))
 
