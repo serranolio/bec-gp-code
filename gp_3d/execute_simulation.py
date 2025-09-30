@@ -39,8 +39,8 @@ simulation_time = ramp_time
 delta_i = 5000 / f_recoil
 delta_f = -1500 / f_recoil
 
-omega_i = 0.2
-omega_f = 0.2
+omega_l_i = 0.2
+omega_l_f = 0.2
 
 sample = 0
 
@@ -50,8 +50,8 @@ def detuning_ramp(t):
     return delta
 
 def lattice_ramp(t):
-    omega = ((omega_i + (omega_f - omega_i)*t/ramp_time)*(t<=ramp_time)
-             + omega_f*(t>ramp_time))
+    omega = ((omega_l_i + (omega_l_f - omega_l_i)*t/ramp_time)*(t<=ramp_time)
+             + omega_l_f*(t>ramp_time))
     return omega
 
 sample_str = (f'sample_{sample:.0f}_ramp_time_{ramp_time_ms:.0f}ms_'
