@@ -57,7 +57,7 @@ def lattice_ramp(t):
 sample_str = (f'sample_{sample:.0f}_ramp_time_{ramp_time_ms:.0f}ms_'
               + f'delta_i_{delta_i*f_recoil:.0f}Hz_'
               + f'delta_f_{delta_f*f_recoil:.0f}Hz_'
-              + f'omega_i_{omega_i:.2f}_omega_f_{omega_f:.2f}_')
+              + f'omega_l_i_{omega_l_i:.2f}_omega_f_{omega_l_f:.2f}_')
 
 out_file_name = (directory_path +
                  '/output/wavefunction_' + sample_str + params_str)
@@ -69,7 +69,7 @@ out_file_name = (directory_path +
 print('loading ground state')
 try:
     psi_gs = np.load(directory_path 
-                     + f'/input/ground_state_omega_l_{omega_i:.2f}_'
+                     + f'/input/ground_state_omega_l_{omega_l_i:.2f}_'
                      + f'delta_{delta_i:.2f}_'
                      + params_str)
     print('loading ground state --> done')
@@ -82,7 +82,7 @@ except FileNotFoundError:
                               omega=omega_i)
     print('computing ground state --> done')
     np.save(directory_path                                                      
-            + f'/input/ground_state_omega_l_{omega_i:.2f}_'                       
+            + f'/input/ground_state_omega_l_{omega_l_i:.2f}_'                       
             + f'delta_{delta_i:.2f}_'                                            
             + params_str, psi_gs)
 
