@@ -54,7 +54,7 @@ def lattice_ramp(t):
              + omega_l_f*(t>ramp_time))
     return omega
 
-sample_str = (f'sample_{sample:.0f}_ramp_time_{ramp_time_ms:.0f}ms_'
+sample_str = (f'sample_{sample:.0f}_ramp_time_{ramp_time_ms:.2f}ms_'
               + f'delta_i_{delta_i*f_recoil:.0f}Hz_'
               + f'delta_f_{delta_f*f_recoil}Hz_'
               + f'omega_l_i_{omega_l_i:.2f}_omega_l_f_{omega_l_f:.2f}_')
