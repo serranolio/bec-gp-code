@@ -164,7 +164,44 @@ def get_ground_state(steps, step_size, delta, omega):
     return np.array(psi.reshape(3*nx*nz))
 
 '''
-5. Fourier transform --------------------------------------------------
+5. TWA noise generator
+'''
+
+def get_dpsi(psi_gs):
+    dpsi = np.zeros(psi_gs.shape, dtype='complex')
+    for i in len(kz[:nz]):
+        for j in len(kx):
+            q_z = kz[j]
+            q_x = kx[i]
+            gauss_corr = 1/(4*n_atoms*dvk.reshape((nx, nz))[j, i])
+
+            alpha_1 = (np.random.normal(scale=gauss_corr)
+                       + 1j*np.random.normal(scale=gauss_corr))
+            alpha_2 = (np.random.normal(scale=gauss_corr)
+                       + 1j*np.random.normal(scale=gauss_corr))
+            alpha_3 = (np.random.normal(scale=gauss_corr)
+                       + 1j*np.random.normal(scale=gauss_corr))
+
+            alpha = np.array([alpha_1, alpha_2, alpha_3])
+
+            epsilon_k = q_z**2 + q_x**2
+
+            gn_ = g * n_atoms * (np.abs(psi_gs)**2.reshape((3, nx*nz))).sum(axis=0)
+            
+            u = np.sqrt((epsilon_k**2 + gn_) / 
+                        (2*np.sqrt(epsilon_k*(epsilon_k + 2*gn_))) - 1/2)
+            v = np.sqrt(u**2 - 1)
+
+            plane_wave_1 = (np.exp(1j*q_z*z_)*jv(0, q_x*x_)).reshape((3, nx*nz))
+            plane_wave_2 = (np.exp(-1j*q_z*z_)*jv(0, q_x*x_)).reshape((3, nx*nz))
+
+            dpsi = dpsi + (alpha[:, None]*(u*plane_wave_1)[None, :]
+                           + alpha.conj()[:, None]*(v*plane_wave_2))
+
+            return dpsi
+
+'''
+6. fourier transform --------------------------------------------------
 '''
 
 def fourier_transform(state, axis=-1):
