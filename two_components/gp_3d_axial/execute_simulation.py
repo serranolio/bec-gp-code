@@ -30,17 +30,18 @@ assert os.path.isdir(directory_path + '/input')
 '''
 
 # ramp parameters
-ramp_time_ms = 50
+ramp_time_ms = 0
 ramp_time = ramp_time_ms / 1000 / t_unit
 
+simulation_time = 20e-3 / t_unit
 #simulation_time = ramp_time
-simulation_time = (ramp_time + 42*np.sqrt(ramp_time))
+#simulation_time = (ramp_time + 42*np.sqrt(ramp_time))
 
 delta_i =  5000 / f_recoil
-delta_f = -1500 / f_recoil
+delta_f = -100 / f_recoil
 
-omega_l_i = 0.2
-omega_l_f = 0.2
+omega_l_i = 0.1
+omega_l_f = 0.1
 
 sample = 0
 

@@ -45,12 +45,10 @@ t_unit = hbar_si/e_unit
 # Hamiltonian parameters
 omega_r = 2.7
 k_l = np.sqrt(1 - (omega_r/4)**2)
-q_zeeman = 7.189099499024451e3 / f_recoil
 #k_l = 0.7378177281686853
 
 params = {
           'omega_r': omega_r,
-          'q_zeeman': q_zeeman,
           'k_l': k_l,
           }
 
