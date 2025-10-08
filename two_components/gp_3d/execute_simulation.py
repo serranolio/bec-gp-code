@@ -89,9 +89,9 @@ except FileNotFoundError:
 '''
 3. TWA-noise ----------------------------------------------------------
 '''
-noise = (np.random.normal(scale=1/np.sqrt(4*n_atoms*dz), 
+noise = (np.random.normal(scale=1/np.sqrt(4*n_atoms*dx*dy*dz), 
                           size=2*nx*ny*nz) +
-         1j*np.random.normal(scale=1/np.sqrt(4*n_atoms*dz),
+         1j*np.random.normal(scale=1/np.sqrt(4*n_atoms*dx*dy*dz),
                              size=2*nx*ny*nz))
 
 if sample==0:
