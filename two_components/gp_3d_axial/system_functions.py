@@ -179,7 +179,7 @@ def get_dpsi(psi_gs):
 
             epsilon_k = q_z**2 + q_x**2
 
-            gn_ = g * n_atoms * (np.abs(psi_gs)**2.reshape((2, nx*nz))).sum(axis=0)
+            gn_ = g * n_atoms * ((np.abs(psi_gs)**2).reshape((2, nx*nz))).sum(axis=0)
             
             u = np.sqrt((epsilon_k**2 + gn_) / 
                         (2*np.sqrt(epsilon_k*(epsilon_k + 2*gn_))) - 1/2)
