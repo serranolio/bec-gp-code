@@ -2,7 +2,7 @@
 """
 II. SYSTEM FUNCTIONS
 GP simulation
-geometry: 1D
+geometry: 3D
 system: 3-component BEC
 author: Federico Serrano
 Physics and Astronomy Department

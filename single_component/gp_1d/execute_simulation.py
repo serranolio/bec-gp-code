@@ -36,11 +36,11 @@ ramp_time = ramp_time_ms / 1000 / t_unit
 simulation_time = ramp_time
 # simulation_time = (ramp_time + 42 * np.sqrt(ramp_time))
 
-delta_i = 5000 / f_recoil
-delta_f = -1500 / f_recoil
+delta_i = 0 / f_recoil
+delta_f = 0 / f_recoil
 
-omega_l_i = 0.2
-omega_l_f = 0.2
+omega_l_i = 0.0
+omega_l_f = 0.0
 
 sample = 0
 
@@ -90,9 +90,9 @@ except FileNotFoundError:
 3. TWA-noise ----------------------------------------------------------
 '''
 noise = (np.random.normal(scale=1/np.sqrt(4*n_atoms*dz), 
-                          size=3*nz) +
+                          size=nz) +
          1j*np.random.normal(scale=1/np.sqrt(4*n_atoms*dz),
-                             size=3*nz))
+                             size=nz))
 
 if sample==0:
     noise = 0*noise

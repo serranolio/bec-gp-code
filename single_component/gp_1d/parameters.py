@@ -29,9 +29,8 @@ fz = 27.99
 fx = 176.22
 fy = 198.53
 
-wx = fx / f_recoil
-wy = fy / f_recoil
 wz = fz / f_recoil
+wx = np.sqrt(fx*fy) / f_recoil
 
 
 e_unit = 2*pi*hbar_si * f_recoil
@@ -41,15 +40,10 @@ t_unit = hbar_si/e_unit
 '''
 2. Parameters ---------------------------------------------------------
 '''
-# Hamiltonian parameters
-omega_r = 2.7
-q_zeeman = 7.189099499024451e3/f_recoil
-k_l = np.sqrt(1 - (omega_r/4)**2)
-#k_l = 0.7378177281686853
+# hamiltonian parameters
+k_l = 0.74
 
 params = {
-          'omega_r': omega_r,
-          'q_zeeman': q_zeeman,
           'k_l': k_l,
           }
 
@@ -59,39 +53,22 @@ g = 8*pi*a
 w3 = (fx*fy*fz)**(1/3)/f_recoil
 mu = (15*w3**3*n_atoms*g/(64*pi))**(2/5)
 gn = (64/105)*4*pi/(w3**3)*mu**(7/2)/g/n_atoms
+#g_1d = 8/3*gn**(3/2)/wz
+g_1d = 8/3*mu**(3/2)/wz
 
-rx = np.sqrt(4*mu) / wx
-ry = np.sqrt(4*mu) / wy
-rz = np.sqrt(4*mu) / wz
+rx = np.sqrt(4*mu)/wx
+rz = np.sqrt(4*mu)/wz
 
 '''
 3. System's geometry --------------------------------------------------
 '''
+nz = 2**9
+lz = 2.5*rz
 
-nx = 2**5
-ny = 2**5
-nz = 2**8
+dz = lz/nz
+z = np.arange(nz)*dz - (lz-dz)/2
 
-lx = 2.5 * rx
-ly = 2.5 * ry
-lz = 2.5 * rz
-
-dx = lx / nx
-dy = ly / ny
-dz = lz / nz
-
-x = np.arange(nx) * dx - (lx - dx) / 2
-y = np.arange(ny) * dy - (ly - dy) / 2
-z = np.arange(nz) * dz - (lz - dz) / 2
-
-kx = 2*pi*np.fft.fftfreq(nx, d=dx)
-ky = 2*pi*np.fft.fftfreq(ny, d=dy)
 kz = 2*pi*np.fft.fftfreq(nz, d=dz)
-
-x_, y_, z_ = np.meshgrid(x, y, z)
-kx_, ky_, kz_ = np.meshgrid(np.fft.fftshift(kx),
-                            np.fft.fftshift(ky),
-                            np.fft.fftshift(kz))
 
 print(f'Initialize system with: \n' +
       f'chemical potential --> {mu} \n' +
@@ -103,7 +80,7 @@ print(f'Initialize system with: \n' +
 '''
 4. External potentials ------------------------------------------------
 '''
-U = ((wx*x_)**2/4 + (wy*y_)**2/4 + (wz*z_)**2/4).reshape(nx*ny*nz)
+U = (wz*z)**2/4
 
 '''
 5. Output format ------------------------------------------------------
@@ -120,7 +97,5 @@ params_str = (f'nz_{nz:.0f}_lz_{lz:.0f}' +
 '''
 7. Assertions ---------------------------------------------------------
 '''
-assert dx < 1 / np.sqrt(gn)
-assert dy < 1 / np.sqrt(gn)
-assert dz < 1 / np.sqrt(gn)
 
+assert dz < 1/np.sqrt(gn)
