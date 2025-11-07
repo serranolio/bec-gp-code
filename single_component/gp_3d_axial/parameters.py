@@ -51,11 +51,11 @@ params = {
 
 # calculated parameters
 a = 100.4*a_si/l_unit
-g = 8*pi*a
+g_eff = 8*pi*a
 
 w3 = (fx*fy*fz)**(1/3)/f_recoil
-mu = (15*w3**3*n_atoms*g/(64*pi))**(2/5)
-gn = (64/105)*4*pi/(w3**3)*mu**(7/2)/g/n_atoms
+mu = (15*w3**3*n_atoms*g_eff/(64*pi))**(2/5)
+gn = (64/105)*4*pi/(w3**3)*mu**(7/2)/g_eff/n_atoms
 
 rx = np.sqrt(4*mu)/wx
 rz = np.sqrt(4*mu)/wz
@@ -93,7 +93,17 @@ print(f'Initialize system with: \n' +
       f'healing length -- > {1/np.sqrt(gn)}')
 
 '''
-4. external potentials ------------------------------------------------
+4. twa parameters 
+'''
+cutoff = (kz_**2 + kx_**2).max() / 2
+kinetic_energy = (kx_**2 + kz_**2)
+renormalization_factor = (1 / (2*kinetic_energy)
+                          * (kinetic_energy > 0)
+                          * (kinetic_energy < cutoff)).sum()
+g_twa = g_eff / (1 - g_eff * renormalization_factor / dv.sum())
+
+'''
+5. external potentials ------------------------------------------------
 '''
 
 U = ((wx*x_)**2/4 +                                                             

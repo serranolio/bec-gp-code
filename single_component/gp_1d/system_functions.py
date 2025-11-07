@@ -158,16 +158,16 @@ def get_ground_state(steps, step_size, delta, omega):
         trap = ((wz*z)**2)/4
         psi0 = (np.sqrt(np.abs(mu - trap)) + 0j)*(trap < mu)
         norm = ((dz*psi0*psi0.conj()).real).sum()
-        psi0 = psi0 / np.sqrt(norm)
+        psi0 = psi0 * np.exp(-1j * k_l * z) / np.sqrt(norm)
 
-    #psi = rk4(fun=sequence_cooling,
-    #          y0=psi_initial,
-    #          frames=2,
-    #          steps=steps,
-    #          step_size=step_size,
-    #          delta=delta,
-    #          omega=omega)[:, -1]
-    psi = split_step_imag_time(psi0, steps, step_size, delta, omega)
+    psi = rk4(fun=sequence_cooling,
+              y0=psi0,
+              frames=2,
+              steps=steps,
+              step_size=step_size,
+              delta=delta,
+              omega=omega)[:, -1]
+    #psi = split_step_imag_time(psi0, steps, step_size, delta, omega)
 
     norm = (dz*np.abs(psi)**2).sum()
     psi = psi / np.sqrt(norm)
