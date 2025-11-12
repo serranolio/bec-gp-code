@@ -90,10 +90,13 @@ except FileNotFoundError:
 '''
 3. TWA-noise ----------------------------------------------------------
 '''
-noise = (np.random.normal(scale=1/np.sqrt(4*n_atoms*np.repeat(dv, 2)), 
-                          size=2*nx*nz) +
-         1j*np.random.normal(scale=1/np.sqrt(4*n_atoms*np.repeat(dv, 2)), 
-                             size=2*nx*nz))
+noise_k = (np.random.normal(scale=1/np.sqrt(4*n_atoms*dvk), size=(2, nx*nz)) +
+           1.0j*np.random.normal(scale=1/np.sqrt(4*n_atoms*dv), size=(2, nx*nz)))
+
+mask = ((kx_**2 + kz_**2) <= (kx_**2 + kz_**2).max() * 4 / 9).reshape(nx*nz)
+
+noise = ifourier_transform(noise_k.reshape((2, nx*nz)) * mask[None, :],
+                           axis=-1).reshape(2*nx*nz)
 
 if sample==0:
     noise = 0*noise

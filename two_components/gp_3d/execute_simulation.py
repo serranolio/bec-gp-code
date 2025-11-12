@@ -89,14 +89,21 @@ except FileNotFoundError:
 '''
 3. TWA-noise ----------------------------------------------------------
 '''
-noise = (np.random.normal(scale=1/np.sqrt(4*n_atoms*dx*dy*dz), 
-                          size=2*nx*ny*nz) +
-         1j*np.random.normal(scale=1/np.sqrt(4*n_atoms*dx*dy*dz),
-                             size=2*nx*ny*nz))
+noise = (np.random.normal(scale=1/np.sqrt(4*n_atoms*dx*dy*dz),
+                            size=(2, nx*ny*nz)) +
+           1.0j*np.random.normal(scale=1/np.sqrt(4*n_atoms*dx*dy*dz),
+                                 size=(2, nx*ny*nz)))
+
+noise_k = np.fft.fftn(noise.reshape((2, nx, ny, nz)),
+                      axis=(1, 2, 3)).reshape((2, nx*ny*nz))
+mask = ((kx_**2 + kz_**2) <= (kx_**2 + kz_**2).max() * 4 / 9).reshape(nx*ny*nz)
+
+noise_k = noise_k * mask[None, :]
+
+noise = np.fft.ifftn(noise_k, axis=(1, 2, 3)).reshape(2*nx*ny*nz)
 
 if sample==0:
     noise = 0*noise
-
 '''
 4. simulation ---------------------------------------------------------
 '''

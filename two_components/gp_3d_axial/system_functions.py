@@ -101,6 +101,7 @@ def H_interaction(psi):
     density = np.sum(np.abs(psi)**2, axis=0)
     return g * n_atoms * (density[None, :] * psi).reshape(original_shape)
 
+
 '''
 3. sequence functions --------------------------------------------------
 '''
@@ -141,8 +142,11 @@ def get_ground_state(steps, step_size, delta, omega):
         psi0.shape = (nx*nz, )
         norm = ((dv*psi0*psi0.conj()).real).sum()
         psi0 = psi0/np.sqrt(norm)
-    psi_initial = np.array([psi0/np.sqrt(2), 
-                            psi0/np.sqrt(2)]).reshape(2*nx*nz)
+    psi_initial = np.array([psi0 * 
+                            np.exp(-1j * k_l * z_.reshape(nx*nz)) / np.sqrt(2), 
+                            psi0 * 
+                            np.exp(1j * k_l * z_.reshape(nx*nz)) / np.sqrt(2)]
+                           ).reshape(2*nx*nz)
 
     psi = rk4(fun=sequence_cooling,
               y0=psi_initial,
@@ -152,6 +156,7 @@ def get_ground_state(steps, step_size, delta, omega):
               delta=delta,
               omega=omega)[:, -1]
     
+    #psi = sol[:, -1]
     psi.shape = (2, -1)
     norm = (dv[None, :]*psi.conj()*psi).sum()
     psi = psi/np.sqrt(norm)

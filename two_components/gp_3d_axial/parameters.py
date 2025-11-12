@@ -67,7 +67,7 @@ rz = np.sqrt(4*mu)/wz
 3. system's geometry --------------------------------------------------
 '''
 nx, nz = 2**6, 2**9
-lx, lz = 1.5*rx, 2.5*rz
+lx, lz = 1.5*rx, (2.5*rz // (2*pi/k_l)) * (2*pi/k_l)
 
 dz = lz/nz
 dx = 2*(lx/(jn_zeros(0, nx+1)[-1])/jv(1, jn_zeros(0, nx)))**2
