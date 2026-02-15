@@ -1,3 +1,9 @@
+[project]
+name = "bec-gp-code"
+version = "0.1.0"
+description = "Gross-Pitaevskii equation solver for multi-component Bose-Einstein condensate"
+authors = ["Federico Serrano"]
+
 [workspace]
 channels = ["conda-forge"]
 name = "bec-gp-code"
@@ -5,7 +11,6 @@ platforms = ["linux-64"]
 version = "0.1.0"
 
 [tasks]
-run = "python scripts/run_simulation.py"
 test = "pytest"
 format = "black src/"
 
